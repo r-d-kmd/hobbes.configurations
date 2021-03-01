@@ -1,0 +1,2 @@
+FROM kmdrd/debug
+ENTRYPOINT [ "dotnet", "collectors.git.dll" ]
