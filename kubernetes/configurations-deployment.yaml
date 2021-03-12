@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configurations
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: configurations
+  template:
+    metadata:
+      labels:
+        app: configurations
+    spec:
+      containers:
+      - imagePullPolicy: Never
+        image: configurations
+        name: configurations
+        envFrom:
+        - secretRef:
+            name: env
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: acr-secret
+status: {}
