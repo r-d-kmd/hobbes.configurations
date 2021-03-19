@@ -17,6 +17,6 @@ FROM kmdrd/runtime:5.0
 COPY --from=build /tmp/start.sh /tmp/start.sh 
 WORKDIR /app
 COPY --from=build /app .
-
+    
 ENV port 8085
 ENTRYPOINT /tmp/start.sh
