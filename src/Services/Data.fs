@@ -35,7 +35,7 @@ module Data =
             ) |> System.String.Join
             |> sprintf "[%s]"
 
-    [<Get ("/sources/%s")>]
+    [<Get ("/sources/%s")>] 
     let sources (systemName:string) =
         let systemName = 
             systemName
