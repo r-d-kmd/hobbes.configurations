@@ -18,7 +18,7 @@ spec:
         name: configurations
         envFrom:
         - secretRef:
-            name: env
+            name: configurations
       restartPolicy: Always
       imagePullSecrets:
       - name: acr-secret
