@@ -21,7 +21,7 @@ workbench.json
 **/AssemblyInfo.fs
 hobbes.server/db/data1/
 kubernetes/env.JSON
-.env
+.env 
 kubernetes/env.yaml
 tutorial/*.html
 tutorial/scripts/*.html
