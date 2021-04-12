@@ -7,12 +7,16 @@
     <DebugType>Portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="db/documents/*.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Compile Include="Broker.fs" />
+    <ProjectReference Condition="Exists('../../../libs/hobbes.core/src/hobbes.core.fsproj')" Include="../../../libs/hobbes.core/src/hobbes.core.fsproj" />
+    <ProjectReference Condition="Exists('../../../libs/hobbes.web/src/hobbes.web.fsproj')" Include="../../../libs/hobbes.web/src/hobbes.web.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Condition="Exists('../../../common/hobbes.messaging/src/Broker.fs')" Include="../../../common/hobbes.messaging/src/Broker.fs" />
+    <Compile Condition="! Exists('../../../common/hobbes.messaging/src/Broker.fs')" Include="Broker.fs" />
     <Compile Include="Services/Data.fs" />
     <Compile Include="Server.fs" />
   </ItemGroup>
-  <Import Project="..\..\..\.paket\Paket.Restore.targets" />
+  <Import Condition="Exists('../../../.paket/Paket.targets')" Project="../../../.paket/Paket.targets" />
+  <Import Condition="(! Exists('../../../.paket/Paket.targets')) AND Exists('../../../.paket/Paket.Restore.targets') " Project="../../../.paket/Paket.Restore.targets" />
+  <Import Condition="(! (Exists('../../../.paket/Paket.targets') OR Exists('../../../.paket/Paket.Restore.targets'))) AND Exists('/.paket/Paket.Restore.targets')" Project="/.paket/Paket.Restore.targets" />
 </Project>

@@ -80,9 +80,8 @@ module Data =
         
         assert(hasValue conf.Id)
         assert(hasValue conf.Source.Provider)
-        assert(conf.Transformations.Length > 0)
-        assert(conf.Source.Provider <> "merge" || conf.Source.Datasets.Length > 0)
-        assert(conf.Source.Provider <> "join" || (hasValue(conf.Source.Left.Value)&& hasValue (conf.Source.Right.Value) && hasValue (conf.Source.Field.Value)))
+        assert(conf.Source.Provider <> "rest" || conf.Source.Urls.Length > 0)
+        assert(conf.Source.Provider <> "odata" || hasValue(conf.Source.Url.Value))
 
         200,configurations.InsertOrUpdate configuration
 
