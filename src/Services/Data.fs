@@ -11,8 +11,9 @@ module Data =
     
     let configurations = Database.Database("configurations", Config.Parse, Log.loggerInstance)
     let transformations = Database.Database("transformations", Newtonsoft.Json.JsonConvert.DeserializeObject<Transformation>, Log.loggerInstance)
-   
-    let inline private listConfigurations () = 
+    
+    [<Get ("/configurationlist")>]
+    let private listConfigurations () = 
         configurations.List()
         |> Seq.filter(fun config ->
             config.JsonValue.Properties() 
