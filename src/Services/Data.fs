@@ -36,7 +36,7 @@ module Data =
             ) |> System.String.Join
             |> sprintf "[%s]"
 
-    [<Get ("/sources/%s")>]
+    [<Get ("/sources/%s")>] 
     let sources (systemName:string) =
         let systemName = 
             systemName
@@ -68,7 +68,6 @@ module Data =
         None -> 404, sprintf "Configuration (%s) not found" configurationName
         | Some c -> 200, c.JsonValue.ToString()
 
-    
     [<Get ("/transformation/%s")>]
     let transformation (transformationName : string) =
         match transformations.TryGet transformationName with
@@ -82,9 +81,8 @@ module Data =
         
         assert(hasValue conf.Id)
         assert(hasValue conf.Source.Provider)
-        assert(conf.Transformations.Length > 0)
-        assert(conf.Source.Provider <> "merge" || conf.Source.Datasets.Length > 0)
-        assert(conf.Source.Provider <> "join" || (hasValue(conf.Source.Left.Value)&& hasValue (conf.Source.Right.Value) && hasValue (conf.Source.Field.Value)))
+        assert(conf.Source.Provider <> "rest" || conf.Source.Urls.Length > 0)
+        assert(conf.Source.Provider <> "odata" || hasValue(conf.Source.Url.Value))
 
         200,configurations.InsertOrUpdate configuration
 
