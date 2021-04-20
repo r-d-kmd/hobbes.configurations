@@ -5,14 +5,11 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <DebugType>Portable</DebugType>
+    <BrokerPath Condition="Exists('../../../common/hobbes.messaging/src/Broker.fs')">../../../common/hobbes.messaging/src/Broker.fs"</BrokerPath>
+    <BrokerPath Condition="$(BrokerPath) == ''">Broker.fs</BrokerPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Condition="Exists('../../../libs/hobbes.core/src/hobbes.core.fsproj')" Include="../../../libs/hobbes.core/src/hobbes.core.fsproj" />
-    <ProjectReference Condition="Exists('../../../libs/hobbes.web/src/hobbes.web.fsproj')" Include="../../../libs/hobbes.web/src/hobbes.web.fsproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Condition="Exists('../../../common/hobbes.messaging/src/Broker.fs')" Include="../../../common/hobbes.messaging/src/Broker.fs" />
-    <Compile Condition="! Exists('../../../common/hobbes.messaging/src/Broker.fs')" Include="Broker.fs" />
+    <Compile Include="$(BrokerPath)" />
     <Compile Include="Services/Data.fs" />
     <Compile Include="Server.fs" />
   </ItemGroup>

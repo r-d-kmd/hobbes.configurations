@@ -5,6 +5,7 @@ open Hobbes.Web
 open Hobbes.Web.Http
 open FSharp.Data
 open Hobbes.Web.RawdataTypes
+open Thoth.Json.Net
 
 [<RouteArea ("/data", false)>]
 module Data =
@@ -12,7 +13,7 @@ module Data =
     let configurations = Database.Database("configurations", Config.Parse, Log.loggerInstance)
     let transformations = Database.Database("transformations", Newtonsoft.Json.JsonConvert.DeserializeObject<Transformation>, Log.loggerInstance)
     
-    [<Get ("/configurationlist")>]
+    
     let private listConfigurations () = 
         configurations.List()
         |> Seq.filter(fun config ->
@@ -21,46 +22,14 @@ module Data =
             |> Option.isSome
         )
 
-    [<Get ("/collectors")>]
-    let collectors () =
+    [<Get ("/configurations")>]
+    let allConfigurations() = 
         200,(",",listConfigurations()
-                  |> Seq.filter(fun config -> 
-                      match config.Source.Provider with
-                      "join" | "merge" -> false
-                      | _ -> true) 
-                  |> Seq.map(fun config ->
-                    config.Source.Provider 
-                  ) |> Seq.distinct
-                  |> Seq.filter(System.String.IsNullOrWhiteSpace >> not)
-                  |> Seq.map (sprintf "%A")
+                 |> Seq.map(fun c ->
+                    c.JsonValue.ToString()
+                 )
             ) |> System.String.Join
             |> sprintf "[%s]"
-
-    [<Get ("/sources/%s")>] 
-    let sources (systemName:string) =
-        let systemName = 
-            systemName
-            |> System.Web.HttpUtility.UrlDecode
-        let availableSources = 
-            listConfigurations()
-            |> Seq.map(fun config ->
-              config.Source
-            )
-
-        let sources = 
-            availableSources
-            |> Seq.filter(fun source ->
-                source.Provider = systemName
-            ) |> Seq.map(fun source ->
-                source.JsonValue.ToString()
-            ) |> Seq.distinct
-        if sources |> Seq.isEmpty then
-            404, sprintf "No sources found for %s. Available sources are %A" systemName (availableSources |> Seq.map(fun s -> s.Provider) |> Seq.distinct |> List.ofSeq)
-        else
-            200,(",\n", sources
-                ) |> System.String.Join
-                |> sprintf "[%s]"
-
 
     [<Get ("/configuration/%s")>]
     let configuration (configurationName : string) =

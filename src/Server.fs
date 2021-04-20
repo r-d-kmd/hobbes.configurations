@@ -12,12 +12,10 @@ let private port = env "port" "8085" |> int
 
 let private appRouter = router {
     not_found_handler (setStatusCode 404 >=> text "The requested ressource does not exist")
-    fetch <@ listConfigurations @>
+    fetch <@ allConfigurations @>
     fetch <@ ping @>
     withArg <@ configuration @>
     withArg <@ transformation @>
-    withArg <@ sources @>
-    fetch <@ collectors @>
     withBody <@ storeConfiguration @>
     withBody <@ storeTransformation @>
 } 
