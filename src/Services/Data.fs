@@ -7,7 +7,7 @@ open FSharp.Data
 open Hobbes.Web.RawdataTypes
 open Thoth.Json.Net
 
-[<RouteArea ("/data", false)>]
+[<RouteArea ("/", false)>]
 module Data =
     
     let configurations = Database.Database("configurations", Config.Parse, Log.loggerInstance)
@@ -22,6 +22,37 @@ module Data =
             |> Option.isSome
         )
 
+    [<Get ("/meta/%s/%s")>]
+    let meta (metaProp, value) = 
+        let tryFindMetaProperty (config : Config.Root) = 
+            match config.Source.Meta.JsonValue with
+            FSharp.Data.JsonValue.Record properties ->
+                properties
+                |> Array.tryFind(fun (prop,_) ->
+                    prop = metaProp
+                ) |> Option.map(fun (_,value) -> 
+                    match value with
+                    FSharp.Data.JsonValue.String s -> s
+                    | _ -> value.ToString()
+                )
+            | m -> failwithf "Meta should be a record %A" m
+        200,(",",listConfigurations()
+                 |> Seq.filter(fun conf ->
+                    match tryFindMetaProperty conf with
+                    None -> 
+                        eprintfn "metaProp:%s, value:%s. Meta: %A" metaProp value (conf.Source.Meta.JsonValue.ToString())
+                        false
+                    | Some v -> 
+                        if v = value then
+                            true
+                        else
+                            eprintfn " %s <> %s" v value
+                            false
+                 ) |> Seq.map(fun c ->
+                    c.JsonValue.ToString()
+                 ) 
+            ) |> System.String.Join
+            |> sprintf "[%s]"
     [<Get ("/configurations")>]
     let allConfigurations() = 
         200,(",",listConfigurations()
