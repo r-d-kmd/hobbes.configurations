@@ -36,6 +36,7 @@ module Data =
                     | _ -> value.ToString()
                 )
             | m -> failwithf "Meta should be a record %A" m
+            
         200,(",",listConfigurations()
                  |> Seq.filter(fun conf ->
                     match tryFindMetaProperty conf with
@@ -53,6 +54,7 @@ module Data =
                  ) 
             ) |> System.String.Join
             |> sprintf "[%s]"
+
     [<Get ("/configurations")>]
     let allConfigurations() = 
         200,(",",listConfigurations()
