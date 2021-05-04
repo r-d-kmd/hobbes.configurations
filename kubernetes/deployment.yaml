@@ -18,8 +18,6 @@ spec:
         name: configurations
         envFrom:
         - secretRef:
-            name: configurations
-        - secretRef:
             name: env
       restartPolicy: Always
       imagePullSecrets:

@@ -1,0 +1,6 @@
+commonLabels:
+  app: configurations
+
+resources:
+- deployment.yaml
+- service.yaml
