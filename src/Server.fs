@@ -15,7 +15,7 @@ let private appRouter = router {
     fetch <@ allConfigurations @>
     fetch <@ ping @>
     withArg <@ configuration @>
-    withArgs <@ meta @>
+    withArgs <@ meta @> 
     withArg <@ transformation @>
     withBody <@ storeConfiguration @>
     withBody <@ storeTransformation @>
